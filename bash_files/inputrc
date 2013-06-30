@@ -1,0 +1,22 @@
+#
+# $Id: inputrc 211 2005-01-24 18:14:38Z suriya $
+#
+
+set show-all-if-ambiguous on
+set match-hidden-files off
+set bell-style none
+# set bell-style visible
+# set editing-mode vi
+# set keymap vi
+"\e[3~": delete-char
+# this is actually equivalent to "\C-?": delete-char
+# VT
+"\e[1~": beginning-of-line
+"\e[4~": end-of-line
+# kvt
+"\e[H":beginning-of-line
+"\e[F":end-of-line
+# rxvt and konsole (i.e. the KDE-app...)
+"\e[7~":beginning-of-line
+"\e[8~":end-of-line
+

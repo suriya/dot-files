@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+#
+# $Id: 1less 211 2005-01-24 18:14:38Z suriya $
+#
+
+#
+# Wrapper around less. Handles URLs
+#
+
+ARGS=""
+function getURL() {
+	URL=$1
+	URLFILE=`basename ${URL}`
+	OUTPUTFILE=`tempfile -s ___${URLFILE}` && wget ${URL} -O ${OUTPUTFILE}
+	echo ${OUTPUTFILE}
+}
+
+while [ $# -gt 0 ]
+do
+	case $1 in
+	http://*|ftp://*)
+		OUTPUTFILE=`getURL $1`
+		trap "rm -fv ${OUTPUTFILE}" EXIT
+		ARGS="${ARGS} ${OUTPUTFILE}"
+		;;
+	*)
+		ARGS="${ARGS} $1"
+		;;
+	esac
+	shift
+done
+
+less ${ARGS}

@@ -1,0 +1,64 @@
+#
+# $Id: UT-settings 895 2007-12-03 17:58:55Z suriya $
+#
+
+#
+# Suriya Subramanian on Thu Oct 23 09:18:56 CDT 2003
+#
+# This is the file /u/suriya/.mine/bash_files/UT-bash_profile
+# It contains things specific to UT alone. Like my default printer in ACES
+# 3rd floor, condor paths, etc
+#
+
+if [ ${HOSTNAME#*.} == "cs.utexas.edu" ]
+then
+    # We want to use the old java version
+    export PATH=/lusr/java2/bin:${PATH}
+    export PATH=/lusr/java5/bin:${PATH}
+
+    # packages installed in /p
+    # Do not add /p/bin to PATH because there is all junk there.
+    # Add ~/.p instead
+    # ~/.p contains symlinks to some executables which I use
+    # The symlinks are created by ~/.mine/setup.sh
+    export PATH=~/.p:${PATH}
+
+    # Add ImageMagick to PATH
+    export PATH=${PATH}:/lusr/ImageMagick/bin
+
+    # Some games are here
+    export PATH=${PATH}:/usr/games
+    export PATH=${PATH}:/lusr/games/bin
+
+    #
+    # This is the default printer I use. This is in ACES 3.202
+    # Generally you should use the commands
+    # $ lpr -Plw42 a.ps
+    # $ lpq -Plw42
+    # but when the PRINTER environmental variable is defined, you can use
+    # $ lpr a.ps
+    # $ lpq 
+    #
+    export PRINTER=${UTCS_PRINTER}
+    
+    #
+    # This is for condor
+    #
+    export PATH=${PATH}:/lusr/condor/bin
+    
+    #
+    # This is for TRIPS
+    #
+    export PATH=${PATH}:/projects/trips/toolchain/current/sbin
+    export PATH=${PATH}:/projects/trips/bin
+
+
+    # gnome
+    export PATH=/lusr/opt/gnome-2.14/bin:${PATH}
+
+    #
+    # UT people add pwd "." to PATH from reason. Removing . from PATH
+    export PATH=`echo ${PATH} | sed 's/:\.:/:/'`
+fi
+
+# vim:ft=sh:

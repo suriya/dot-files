@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# Read content from stdin and post it to dpaste.com
+#
+# Usage: dpaste [Language]
+
+if [ $# == 1 ]
+then
+    LANGUAGE=$1
+else
+    LANGUAGE=""
+fi
+
+curl -si -F 'content=<-' -F language=${LANGUAGE} http://dpaste.com/api/v1/ | grep ^Location | cut -d' ' -f2

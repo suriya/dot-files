@@ -1,0 +1,16 @@
+#!/usr/bin/env python2.5
+
+import feedparser
+import os
+import tinyurl
+
+# FEED_URL = 'http://mssnlayam.livejournal.com/data/rss'
+FEED_URL = 'http://mssnlayam.wordpress.com/feed/'
+
+feed = feedparser.parse(FEED_URL)
+latest = feed['entries'][0]
+url = tinyurl.make_tiny(latest.link)
+tweet = 'Blogged: %s: %s' % (latest.title, url)
+print tweet
+command = 'twyt tweet "%s"' % tweet
+os.system(command.encode('utf-8'))

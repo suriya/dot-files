@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+#
+# $Id: xvim 760 2007-03-19 15:45:14Z suriya $
+#
+
+xterm -bg black -fg white -e vim $1

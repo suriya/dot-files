@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+#
+# $Id: hotkeys-custom 760 2007-03-19 15:45:14Z suriya $
+#
+
+hotkeys -t custom

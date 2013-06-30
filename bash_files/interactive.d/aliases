@@ -1,0 +1,26 @@
+#
+# $Id: aliases 1436 2012-07-17 11:01:12Z suriya $
+#
+
+alias cp='cp -i'
+alias dir='ls --color=auto --format=vertical'
+alias l='ls -CF'
+alias la='ls -A'
+alias ll='ls -l'
+alias ls='ls -h --color=auto'
+alias mv='mv -i'
+alias rm='rm -i'
+alias m='make'
+alias units='units --verbose'
+alias vdir='ls --color=auto --format=long'
+alias adobetops='acroread 5 -toPostScript'
+alias grep='grep -I --exclude="*.svn*"'
+alias xterm="xterm -bg black -fg white"
+alias d='display'
+alias vim='/usr/bin/vim'
+alias lpr='lpr -h'
+alias dos2unix='recode ibmpc..lat1'
+alias unix2dos='recode lat1..ibmpc'
+alias less='less -r'
+alias tw='twyt tweet'
+alias lj='ljcharm -q --autoformat=off -s'

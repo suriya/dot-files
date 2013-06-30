@@ -1,0 +1,59 @@
+#
+# $Id: env-variables 1477 2013-06-30 04:57:44Z suriya $
+#
+
+# Localization
+# Use the full power of unicode
+export LANG=en_US.UTF-8
+
+# don't put duplicate lines in the history. See bash(1) for more options
+export HISTCONTROL=erasedups:ignorespace
+export HISTSIZE=100000
+# export HISTIGNORE=1extract*:1find*:1printPDF*:
+
+# set ~/.gdb_history as the gdb history file
+export GDBHISTFILE=~/.gdb_history
+
+# enable color support of ls
+which dircolors > /dev/null && eval `dircolors -b`
+
+# Set the screen directory
+export SCREENDIR=$HOME/.screen
+
+#
+# I am setting up a few important Environmental variables, to sane
+# values
+#
+export PAGER=less
+export MAILER=mutt
+export EDITOR=vim
+[ `uname` == "Darwin" ] && EDITOR=/usr/bin/vim
+export INPUTRC=~/.mine/bash_files/inputrc
+export UTCS_PRINTER=lw15
+
+# LaTeX
+export TEXINPUTS=~/.mine/texmf:${TEXINPUTS}
+# This is for tamiltrans
+export TEXFONTS=${TEXFONTS}:~/.mine/tamiltrans/fonts
+
+### This makes less great #################
+which lesspipe > /dev/null && eval `lesspipe`
+###########################################
+
+#
+# Be very strict (secure) regarding permissions of new files
+# umask 077
+#
+umask u=rwx,g=,o=
+
+LOCALPYTHONPATH=~/.graft/lib/python2.5/site-packages
+if [ -d ${LOCALPYTHONPATH} ]
+then
+    export PYTHONPATH=${LOCALPYTHONPATH}:${PYTHONPATH}
+fi
+[ -d /Users/suriya/.graft ] && export GEM_HOME=/Users/suriya/.graft
+[ -d /Users/suriya/.graft/share/man ] && export MANPATH=/Users/suriya/.graft/share/man:${MANPATH}
+[ -d /Users/suriya/.graft/macports/share/man ] && export MANPATH=/Users/suriya/.graft/macports/share/man:${MANPATH}
+
+export npm_config_prefix=`readlink -f ~/npm-modules`
+export PATH=$npm_config_prefix/bin:$PATH

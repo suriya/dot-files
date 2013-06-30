@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+#
+# $Id: 1login 760 2007-03-19 15:45:14Z suriya $
+#
+
+
+CYAN="[36;01m"
+RED="[31;01m"
+OFF="[0m"
+
+[ ${HOSTNAME#*.} == "cs.utexas.edu" ] ||
+	{ echo "${RED}You can run this command only on a UTCS machine${OFF}";
+	  exit 1;
+	}
+
+FASTHOST=`cshosts publinux | idlehost`
+if [ -z ${FASTHOST} ]
+then
+	echo "${RED}Error in finding the best host${OFF}" >&2
+	exit 1
+else
+	echo "Identified ${CYAN}${FASTHOST}${OFF} as the best host to ssh to" >&2
+	ssh ${FASTHOST}
+fi

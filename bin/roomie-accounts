@@ -1,0 +1,139 @@
+#!/usr/bin/env python
+
+#
+# $Id: roomie-accounts 760 2007-03-19 15:45:14Z suriya $
+#
+
+import itertools
+
+class Owe:
+    """Contains information about what A owes B.
+    I repeat --- what A owes B"""
+
+    def __init__(self, A, B, amount):
+        assert(amount >= 0)
+        self.A = A
+        self.B = B
+        self.amount = amount
+
+    def asNetDict(self):
+        """Convert this owe to a NetDict."""
+        netdict = NetDict()
+        if self.A != self.B:
+            netdict.netdict[self.A] = -self.amount
+            netdict.netdict[self.B] =  self.amount
+        return netdict
+
+    def __str__(self):
+        return '%-10s owes %-10s %7.2f' % (self.A, self.B, self.amount)
+
+class OweList:
+    """Contains a list of Owe instances.
+
+    Plain and simple"""
+    def __init__(self):
+        self.owelist = []
+
+    def add(self, owe):
+        assert isinstance(owe, Owe)
+        self.owelist.append(owe)
+
+    def __str__(self):
+        return '\n'.join(str(i) for i in self.owelist)
+
+class NetDict:
+    """Contains a dictionary of how much money each person should get."""
+    def __init__(self):
+        self.netdict = {}
+
+    def __str__(self):
+        return '\n'.join('%-10s should get %7.2f' % (k, v)
+            for k,v in self.netdict.iteritems())
+
+    def __add__(self, other):
+        assert isinstance(other, NetDict)
+        result = NetDict()
+        for k,v in itertools.chain(self.netdict.iteritems(), other.netdict.iteritems()):
+            try:
+                result.netdict[k] += v
+            except KeyError:
+                result.netdict[k] = v
+        return result
+
+    def asOweList(self):
+        """Convert a NetDict to an OweList."""
+        # netlist is a list of tuples. Each tuple has two fields.
+        # the first field is the amount that a person should receive, and
+        # the second field is the name of the person
+        netlist = [ (v,k) for (k,v) in self.netdict.iteritems() ]
+        owelist = OweList()
+        while (len(netlist) > 1):
+            netlist.sort()
+            low_amount,  low_person  = netlist[0]
+            high_amount, high_person = netlist[-1]
+            assert ((low_amount < 0) and (0 < high_amount))
+            amount = min(-low_amount, high_amount)
+            owelist.add(Owe(low_person, high_person, amount))
+            netlist[0] = (low_amount + amount, low_person)
+            netlist[-1] = (high_amount - amount, high_person)
+            netlist = [ (x,y) for x,y in netlist if x != 0 ]
+        return owelist
+
+class Transaction:
+    __doc__ = """A transaction.
+    Its constructor accepts a list with 3 elements. list[0] is the list of
+    persons who paid the amount. Originally it was a single person. But
+    this modified now to reflect people sharing the HEB Vibha cards. So we
+    collectively pay the amount. list[1] is the list of persons for whom
+    the amount was paid (because some items are not used by everyone).
+    list[2] contains the amount paid for. An example of such a list is
+    [ [ 'A' ], [ 'A', 'B', 'C' ], 23.34 ]
+    This means that 'A' paid 23.34 for something shared by 'A', 'B' and
+    'C'.
+    
+    The getOweList returns a OweList which says how much each one owes
+    another"""
+    def __init__(self, transaction):
+        # Sanity checks
+        assert isinstance(transaction, list)
+        persons_who_paid = transaction[0]
+        assert isinstance(persons_who_paid, list)
+        persons_for_whom_paid = transaction[1]
+        assert isinstance(persons_for_whom_paid, list)
+        amount = transaction[2]
+        assert isinstance(amount, float) or isinstance(amount, int)
+        # Calculate the individual amounts
+        netdict = NetDict()
+        per_person_amount = (float(amount) /
+            (len(persons_for_whom_paid) * len(persons_who_paid)))
+        for i in persons_for_whom_paid:
+            assert isinstance(i, str)
+            for j in persons_who_paid:
+                assert isinstance(j, str)
+                netdict = netdict + Owe(i, j, per_person_amount).asNetDict()
+        self.netdict = netdict
+
+    def getNetDict(self):
+        return self.netdict
+
+
+import sys
+import imp
+
+if(len(sys.argv) != 2):
+    sys.stderr.write('Usage: %s transaction_file\n' % sys.argv[0])
+    sys.exit(1)
+
+data_file = imp.load_source('', '.', open(sys.argv[1]))
+
+netdict = NetDict()
+for i in data_file.transactions:
+    t = Transaction(i)
+    netdict = netdict + t.getNetDict()
+print netdict.asOweList()
+print
+print "Total amount spent:", sum(i[2] for i in data_file.transactions)
+
+#
+# vim:ts=4:sw=4:et
+#

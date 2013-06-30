@@ -1,0 +1,11 @@
+% $Id: t1paranar.fd 266 2005-02-18 21:31:34Z suriya $
+% Information on how to get the paranar fonts
+
+\ProvidesFile{t1paranar.fd}[Paranar font converted from ttf]
+
+\DeclareFontFamily{T1}{paranar}{}
+
+\DeclareFontShape{T1}{paranar}{m}{n}{<-> ecparanar}{}
+\DeclareFontShape{T1}{paranar}{m}{it}{<-> ecparanari}{}
+
+\endinput

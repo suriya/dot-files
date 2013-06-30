@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+#
+# $Id: 1temperature 760 2007-03-19 15:45:14Z suriya $
+#
+
+#
+# Just run this script, you will know what it does
+#
+
+# set -v 
+
+BLUE="[34;01m"
+CYAN="[36;01m"
+RED="[31;01m"
+OFF="[0m"
+
+function getTemp()
+{
+    #
+    # Example call getTemp Madras VOMM
+    #
+    TEMPFILE=`tempfile`
+    PLACE=$1
+    CODE=$2
+    wget -q --output-document=${TEMPFILE} \
+    "http://weather.cnn.com/weather/forecast.jsp?locCode=${2}"
+    CURRENT_TEMP=`grep "(.*&deg;C)" ${TEMPFILE} | head -1 | \
+    sed 's/^[^(]*(//' | sed 's/).*(/  /' | sed 's/).*$//' | \
+    cut -f1 -d'&'` 
+    MAX_MIN=`grep cnnTempHi ${TEMPFILE} | head -1 | \
+    sed 's/^[^(]*(//' | sed 's/).*(/  /' | sed 's/).*$//' `
+    MAX_TEMP=`echo ${MAX_MIN} | cut -f1 -d' ' | cut -f1 -d'&'`
+    MIN_TEMP=`echo ${MAX_MIN} | cut -f2 -d' ' | cut -f1 -d'&'`
+    rm -f ${TEMPFILE}
+    #printf "%-23s %5s     %3s %3s\n" "$1" "${CURRENT_TEMP}" ${MAX_TEMP} ${MIN_TEMP}
+    printf "%-23s ${CYAN}%5s${OFF}     ${RED}%3s${OFF} ${BLUE}%3s${OFF}\n" "$1" "${CURRENT_TEMP}" ${MAX_TEMP} ${MIN_TEMP}
+}
+
+echo "               TEMPERATURE" >&2
+echo "-----------------------------------------" >&2
+printf "%-23s %5s     %3s %3s\n" "Place" "Cur" "Max" "Min" >&2
+echo "-----------------------------------------" >&2
+getTemp "Austin, TX"            AUS
+getTemp "Madras"                VOMM
+getTemp "Mumbai"                VAJJ
+echo "-----------------------------------------" >&2
+echo "Got from: http://weather.cnn.com/weather/" >&2
+
+# Austin http://weather.cnn.com/weather/forecast.jsp?locCode=AUS

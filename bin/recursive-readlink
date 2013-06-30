@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#
+# $Id: recursive-readlink 760 2007-03-19 15:45:14Z suriya $
+#
+
+#
+# Recursively follows a link and prints them till it reaches a non symlink.
+# For example,
+# $ recursive-readlink /usr/bin/editor
+# /usr/bin/editor  --> /etc/alternatives/editor  --> /usr/bin/vim
+#
+
+[ $# -ne 1 ] && { 	echo "Usage: $0 symlink" >&2;
+			exit 1;
+		}
+a=$1
+echo -n ${a} " ";
+a=`readlink ${a}`
+while [ $? -eq 0 ]
+do
+	echo -n '-->' ${a} " ";
+	a=`readlink ${a}`
+done
+echo

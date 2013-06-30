@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# Backup the currect directory and all its contents to UTCS.
+
+rsync -iavzR `readlink -f .` carbon-arc.cs.utexas.edu:ubuntu-backup

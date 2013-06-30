@@ -1,0 +1,21 @@
+[default]
+access_key = 085PNWZSR3WPK45QSKG2
+acl_public = True
+bucket_location = US
+default_mime_type = binary/octet-stream
+delete_removed = False
+dry_run = False
+encrypt = False
+force = False
+guess_mime_type = True
+host_base = s3.amazonaws.com
+host_bucket = %(bucket)s.s3.amazonaws.com
+human_readable_sizes = False
+preserve_attrs = True
+proxy_host = 
+proxy_port = 0
+recv_chunk = 4096
+secret_key = ozRIpBV3QolwcldEZTSKr1rIY55j9lM58/sAZ7gS
+send_chunk = 4096
+use_https = False
+verbosity = WARNING

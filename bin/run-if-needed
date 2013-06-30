@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+
+#
+# $Id: run-if-needed 760 2007-03-19 15:45:14Z suriya $
+#
+
+#   FILE: run-if-needed.sh
+# AUTHOR: Suriya Subramanian <suriya@cs.utexas.edu>
+#   DATE: Sat Jun 12 16:28:54 CDT 2004
+#
+# Copyright (C) 2004 Suriya Subramanian <suriya@cs.utexas.edu>
+# All rights reserved.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+# ===========================  =================================================
+
+#
+# This is used by me to run some command (for example, a fortune, reminding
+# me of people's birthdays, etc) at login. But I dont want this command to
+# run at every login. I dont need to be reminded of birthday's everytime I
+# spawn a new console, right? What I want is to be reminded or shown a
+# fortune, if I spawn a console after some hours. So, given a
+# TIMESTAMPFILE, INTERVAL and a COMMAND to execute, executes the command if
+# TIMESTAMPFILE has not been accessed in the past INTERVAL seconds. After
+# executing the command, it touches TIMESTAMPFILE. An option "--force" is
+# available to force execution of the command, eventhough it has been
+# executed recently (within INTERVAL). In such a case INTERVAL should not
+# be logically required, but this script is not yet smart enough to check
+# for that
+#
+# Usage: run-if-needed.sh --timestamp hello.timestamp \
+#                         --interval 3600 \
+#                         --command echo "Hello World"
+#
+# Putting the above command into ~/.bashrc echoes "Hello World" whenever a
+# new bash shell is created after an interval of an hour
+#
+
+function usage() {
+	echo "Usage: FIXME" >&2;
+	exit 1;
+}
+
+function process_cmdline() {
+	FORCE=0
+	while [ $# -ne 0 ]
+	do
+		case $1 in
+			--timestamp | -t)
+				shift
+				TIMESTAMPFILE=$1
+				shift
+				;;
+			--interval | -i)
+				shift
+				INTERVAL=$1
+				shift
+				;;
+			--command | -c)
+				shift
+				COMMANDFLAG=1
+				COMMAND=$@
+				# eliminate remaining arguments (since we have gobbled them
+				shift $#
+				;;
+			--force | -f)
+				shift
+				FORCE=1
+				;;
+			*)
+				echo "Warning: Ignoring commandline argument" $1 >&2
+				shift
+				;;
+		esac
+	done
+}
+
+function should_We_Run() {
+	[ ${FORCE} == 1 ] && return 0;
+	[ -a ${TIMESTAMPFILE} ] || return 0;
+	[ $((`date +%s` - `stat --format=%X ${TIMESTAMPFILE}`)) -gt ${INTERVAL} ];
+}
+
+function Run() {
+	${COMMAND} || exit 1;
+	touch ${TIMESTAMPFILE}
+}
+
+process_cmdline $@
+# --timestamp file --interval 2342 --command grep -i suriya /etc/passwd
+
+[ ${TIMESTAMPFILE} ] || { echo "TIMESTAMPFILE not specified" >&2; usage; }
+[ ${INTERVAL} ] || { echo "INTERVAL not specified" >&2; usage; }
+[ ${COMMANDFLAG} ] || { echo "COMMAND not specified" >&2; usage; }
+
+should_We_Run && Run
+exit 0

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+#
+# $Id: klip 760 2007-03-19 15:45:14Z suriya $
+#
+
+# Copy standard input or a string to the KDE clipboard.
+if [[ $# -eq 0 ]]; then
+    dcop klipper klipper setClipboardContents "$(cat)"
+else
+    dcop klipper klipper setClipboardContents "$*"
+fi

@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# $Id: 1status 1099 2008-11-21 17:36:51Z suriya $
+
+if [ -d ./.svn ]; then
+    svn status
+else
+    if [ -d ./CVS ]; then
+        cvs -qn update -d
+    else
+        if [ -d ~/.svk/local ] && svk info &>/dev/null; then
+            svk status
+        else
+            if hg id &>/dev/null; then
+                hg status
+            else
+                echo "Not a SVN/CVS/SVK/Mercurial working directory" >&2
+                exit 1
+            fi
+        fi
+    fi
+fi

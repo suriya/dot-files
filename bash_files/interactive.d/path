@@ -1,0 +1,31 @@
+#
+# $Id: path 1165 2008-12-31 17:20:19Z suriya $
+#
+
+#
+# Adding various directories to PATH
+#
+
+function addPath() {
+    DIR=$1
+    if [ -d "${DIR}" ]
+    then
+        PATH="${DIR}:${PATH}"
+    fi
+}
+
+# Adding ~/bin to PATH
+PATH="${HOME}/bin:${PATH}"
+
+# This is for compilercache
+# PATH="${HOME}/.mine/compilercache:${PATH}"
+
+# This if for realplayer
+# if [ -d "${HOME}/.realplayer" ]
+# then
+    # PATH="${HOME}/.realplayer:${PATH}"
+# fi
+
+addPath ${HOME}/.realplayer
+addPath ${HOME}/.graft/bin
+addPath ${HOME}/.graft/macports/bin

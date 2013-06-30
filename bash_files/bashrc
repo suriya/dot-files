@@ -1,0 +1,16 @@
+#
+# $Id: bashrc 749 2007-02-19 16:02:09Z suriya $
+#
+
+#
+# Suriya Subramanian on Sat Aug 14 14:41:07 CDT 2004
+# This is my bashrc. This is in the location ~/.mine/bash_files/bashrc
+#
+
+# If running interactively, then:
+if [ "$PS1" ]; then
+	for script in ~/.mine/bash_files/interactive.d/*.sh
+	do
+		source ${script}
+	done
+fi

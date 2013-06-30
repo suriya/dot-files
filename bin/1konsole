@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+#
+# $Id: 1konsole 760 2007-03-19 15:45:14Z suriya $
+#
+
+konsole --geometry 1024x768 "$@" &
+

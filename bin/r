@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+#
+# $Id: r 760 2007-03-19 15:45:14Z suriya $
+#
+
+RED="[31;01m"
+OFF="[0m"
+
+[ ${HOSTNAME#*.} == "cs.utexas.edu" ] ||
+	{ echo "${RED}You can run this command only on a UTCS machine${OFF}";
+	  exit 1;
+	}
+
+[ $# -ne 1 ] && { echo "Usage: $0 <user>">&2; exit 1; }
+rwho | grep $1

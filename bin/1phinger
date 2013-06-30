@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+[ $# -ne 1 ] && { echo "Usage: $0 name">&2; exit 1; }
+
+finger "$1"@x500.utexas.edu

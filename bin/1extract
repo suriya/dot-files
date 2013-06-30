@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+#
+# $Id: 1extract 760 2007-03-19 15:45:14Z suriya $
+#
+
+#
+# This script is for extracting archives
+# It automatically calls the command for extraction based on the extension
+# of the file
+# If the executable's filename ends in "-tmp" then, it extracts to /tmp
+#
+# 1extract      : extracts to "."
+# 1extract-tmp  : extracts to "/tmp"
+#
+
+GREEN="[32;01m"
+OFF="[0m"
+
+[ $# -eq 0 ] && { echo "Usage: $0 <archive> ...">&2; exit 1; }
+
+while [ $# -ne 0 ]
+do
+	IS_ZIP=0
+	IS_TAR=0
+	IS_GZ=0
+	IS_BZ2=0
+
+	[ ${1##*.} = "zip"  ] && IS_ZIP=1;
+	[ ${1##*.} = "gz"   ] && IS_GZ=1;
+	[ ${1##*.} = "tar"  ] && IS_TAR=1;
+	[ ${1##*.} = "tgz"  ] && { IS_TAR=1; IS_GZ=1; }
+	[ ${1##*.} = "bz2"  ] && IS_BZ2=1;
+	## Checking for tar.gz
+	if [ ${IS_GZ} = "1" ]
+	then
+		GUNZIPPED_FILENAME=`basename $1 .gz`
+		[ ${GUNZIPPED_FILENAME##*.} = "tar" ] && { IS_TAR=1; IS_GZ=1; }
+	fi
+	## Checking for tar.bz2
+	if [ ${IS_BZ2} = "1" ]
+	then
+		BUNZIPPED_FILENAME=`basename $1 .bz2`
+		[ ${BUNZIPPED_FILENAME##*.} = "tar" ] && { IS_TAR=1; IS_BZ2=1; }
+	fi
+
+	[ ${IS_TAR} = "0" ] &&
+	[ ${IS_ZIP} = "0" ] &&
+	{ echo "$1 is NOT a tar or zip file. Exiting...">&2; exit 1; }
+
+	CMDLINE_OPTION=""
+	[ ${IS_GZ}  = "1" ] && CMDLINE_OPTION="z"
+	[ ${IS_BZ2} = "1" ] && CMDLINE_OPTION="j"
+
+	#
+	# If the command line of this executable is 1extract-tmp then extract in the
+	# current directory
+	# Else extract in /tmp
+	#
+
+	EXTRACT_DIRECTORY="."
+	[ ${0##*-} = "tmp" ] && EXTRACT_DIRECTORY="/tmp"
+
+	#
+	# Set the commandline and execute it
+	#
+	[ ${IS_TAR} = "1" ] && CMDLINE="tar -${CMDLINE_OPTION}xvf $1 -C ${EXTRACT_DIRECTORY}"
+	[ ${IS_ZIP} = "1" ] && CMDLINE="unzip $1 -d ${EXTRACT_DIRECTORY}"
+	echo ${GREEN}${CMDLINE}${OFF}>&2
+	${CMDLINE}
+
+	shift
+done

@@ -1,0 +1,10 @@
+#
+# $Id: README 211 2005-01-24 18:14:38Z suriya $
+#
+
+If you are interested in using these files, then:
+
+    1. This README file should be inside a directory called dot-files
+    2. Rename dot-files to .mine and move it to ~
+           mv dot-files ~/.mine
+    3. Read ~/.mine/setup.sh and run it

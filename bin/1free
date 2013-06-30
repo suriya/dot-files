@@ -1,0 +1,52 @@
+#!/usr/bin/env python
+
+#
+# $Id: 1free 760 2007-03-19 15:45:14Z suriya $
+#
+
+import os
+import sys
+import re
+
+fp = os.popen('free')
+
+
+# The first line is
+#            total       used       free     shared    buffers     cached
+# We discard the line
+fp.readline()
+
+# The second line is
+# Mem:        125832     119236       6596          0       5872      58480
+# We need to get the info about memory from it
+mem_free = re.compile(r'Mem:\s+(\d+)\s+(\d+).*').match(fp.readline())
+if(mem_free == None):
+	sys.stderr.write('Some error occured\n')
+	sys.exit(1)
+else:
+	total_memory = float(mem_free.group(1))
+	used_memory = float(mem_free.group(2))
+	sys.stdout.write('Mem  (%used): ' + str(used_memory/total_memory*100) +
+		'\n')
+# The third line is
+# -/+ buffers/cache:      23428     102404
+# We discard the line
+fp.readline()
+
+# The fourth line is
+# Swap:       265032          0     265032
+# We need to get the info about swap from it
+swap_free = re.compile(r'Swap:\s+(\d+)\s+(\d+).*').match(fp.readline())
+if(swap_free == None):
+	sys.stderr.write('Some error occured\n')
+	sys.exit(1)
+else:
+	total_swap = float(swap_free.group(1))
+	used_swap = float(swap_free.group(2))
+	if(total_swap != 0):
+		sys.stdout.write('Swap (%used): ' + str(used_swap/total_swap*100) +
+			'\n')
+	else:
+		sys.stderr.write('Swap        : Probably, this system does not use swap\n')
+fp.close()
+sys.exit(0)

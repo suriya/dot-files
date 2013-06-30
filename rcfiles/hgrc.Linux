@@ -1,0 +1,12 @@
+[extensions]
+hgk=
+# color=
+graphlog=
+# bookmarks=
+
+[color]
+diff.file_b = blue bold
+diff.inserted = blue bold
+
+[ui]
+style = /u/suriya/.mine/rcfiles/map-cmdline.changedfiles

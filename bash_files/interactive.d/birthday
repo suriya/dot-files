@@ -1,0 +1,32 @@
+#
+# $Id: birthday 1272 2009-10-15 23:42:46Z suriya $
+#
+
+### Thirukkural #################################################
+which fortune > /dev/null &&
+run-if-needed --timestamp ~/.mine/thirukkural/timestamp \
+              --interval 21600 \
+              --command fortune ~/.mine/thirukkural/thirukkural
+#################################################################
+
+### Fortune from LOST ###########################################
+# run-if-needed --timestamp ~/.mine/LOST/timestamp \
+#               --interval 3600 \
+#               --command fortune ~/.mine/LOST/LOST
+#################################################################
+
+## Birthday reminder ############################################
+which birthday > /dev/null &&
+run-if-needed --timestamp ~/.mine/birthdays/timestamp \
+              --interval 10800 \
+              --command birthday -f ~/.mine/birthdays/birthdays
+#################################################################
+
+## Spam list ####################################################
+if [ ${HOSTNAME#*.} == "cs.utexas.edu" ] && [ ${HOSTNAME:0:7} != "horatio" ]
+then
+    run-if-needed --timestamp ~/.mine/procmail/spam-timestamp \
+                  --interval 86400 \
+                  --command frm ~/Mutt-Mail/spam
+fi
+#################################################################

@@ -1,0 +1,19 @@
+#!/usr/bin/env python2.5
+
+#
+# $Id: 1date 758 2007-03-19 15:29:26Z suriya $
+#
+
+from datetime import datetime
+import sys
+sys.path.append('/p/graft/pytz-2006g/lib/python2.4/site-packages')
+from pytz import timezone
+
+if len(sys.argv) <= 1:
+    city = 'Asia/Calcutta'
+else:
+    city = sys.argv[1]
+
+india_tz = timezone(city)
+india_time = datetime.now(india_tz)
+print india_time.strftime('%a %b %d %H:%M:%S %Z %Y')

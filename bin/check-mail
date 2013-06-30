@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+#
+# $Id: check-mail 760 2007-03-19 15:45:14Z suriya $
+#
+
+RED="[31;01m"
+OFF="[0m"
+
+[ ${HOSTNAME#*.} == "cs.utexas.edu" ] ||
+	{ echo "${RED}You can run this command only on a UTCS machine${OFF}";
+	  exit 1;
+	}
+
+function gotNewMail() {
+	[ -a $1 ] || return 1
+	ACCESS_TIME=`stat --format=%X $1`
+	MODIFI_TIME=`stat --format=%Y $1`
+	[[ $((${ACCESS_TIME} - ${MODIFI_TIME})) -lt 0 ]]
+}
+
+# environmental variable MAILPATH is defined in this file
+[ -z "${MAILPATH}" ] && source ~/.mine/bash_files/interactive.d/mailpath
+
+MAILBOXES=`echo ${MAILPATH} | tr ":" "\n" | cut -d'?' -f1`
+for i in ${MAILBOXES}
+do
+	gotNewMail ${i} && exit 0
+done
+
+exit 1

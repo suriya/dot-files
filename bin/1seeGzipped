@@ -1,0 +1,121 @@
+#!/usr/bin/env python
+
+#   FILE: 1seeGzipped -- 
+# AUTHOR: Suriya Subramanian <suriya@cs.utexas.edu>
+#   DATE: 30 November 2002
+#
+# Copyright (C) 2002 Suriya Subramanian <suriya@cs.utexas.edu>
+# All rights reserved.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+# ===========================  =================================================
+
+#
+# $Id: 1seeGzipped 760 2007-03-19 15:45:14Z suriya $
+#
+
+#
+# This is a generic handler for .gz files. This file can be used to open
+# any .gz file I suppose. The keyword is kfmclient. ``kfmclient exec
+# filename'' will open any file
+#
+
+import os
+import sys
+import re
+import tempfile
+import md5
+
+def tempFileName(suffix):
+	#
+	# This is because python (as little as I know) has a name @1223
+	# for tempfiles which is troubling me
+	#
+	file = open("/dev/urandom")
+	if(file):
+		randomechars=file.read(10)
+	else:
+		sys.stderr.write("Error opening file /dev/urandom\n. Exiting...\n")
+		sys.exit(-1)
+	m = md5.new()
+	m.update(randomechars)
+	filename = ("/tmp/" + m.hexdigest() + suffix)
+	if(os.path.exists(filename)):
+		return None
+	else:
+		return filename
+
+def openFile(originalfilename, filename):
+	#
+	# The originalfilename is not actually needed. It is
+	# used for displaying in the caption
+	# filename contains the suffix also. e.g. hello.dvi
+	#
+
+	commandline = ("kfmclient exec " + filename)
+	sys.stderr.write("The comand line is " + commandline + "\n")
+	os.system(commandline)
+	if(os.access("/usr/sbin/lsof", os.F_OK | os.R_OK | os.X_OK)):
+		waituntilusedcommand = ("true; while [ $? -eq 0 ]; "
+		"do sleep 10; "
+		"/usr/sbin/lsof '" + filename + "' >/dev/null; "
+		"done")
+		os.system(waituntilusedcommand)
+	else:
+		sys.stderr.write("The executable /usr/sbin/lsof "
+		"does not seem to exist.\n"
+		"Check this out.\n"
+		"The temporary file " + filename +
+		"will not be deleted after being used.\n"
+		"This can be done only when lsof exists\n")
+	return 0
+
+
+def openGzippedFile(filename):
+	# filename is of the form hello.dvi.gz
+	if(os.access(filename, os.F_OK | os.R_OK) == 0):
+		sys.stderr.write("Cannot access file: " + filename + "\n")
+		return -1
+	result = re.match("(.+)(\.gz)", filename)
+	if(result) :
+		newfilename = None
+		while(newfilename == None):
+			newfilename = tempFileName("-" +
+			os.path.basename(result.group(1)))
+		commandline = ("gunzip " + filename + " --stdout > " +
+		newfilename)
+		rv = os.system(commandline)
+		if(rv):
+			sys.stderr.write("Error in executing gunzip.\n"
+			"The command line was: " + commandline + "\n")
+		sys.stderr.write("New filename is " + newfilename + "\n")
+		rv = openFile(filename, newfilename)
+		sys.stderr.write("Deleting file " + newfilename + "\n")
+		os.remove(newfilename)
+	else:
+		if(re.match("(.+)", filename)):
+			rv = openFile(filename, filename)
+		else:
+			sys.stderr.write("Fatal Error\n")
+			rv = -1
+	return rv
+
+if(len(sys.argv) != 2):
+	sys.stderr.write("Usage: " + sys.argv[0] + " <file>\n")
+	rv = 1
+else:
+	rv = openGzippedFile(sys.argv[1])
+sys.exit(rv)

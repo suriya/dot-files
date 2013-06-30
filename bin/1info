@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#
+# $Id: 1info 760 2007-03-19 15:45:14Z suriya $
+#
+
+#
+# This will work only if the glibc doc is installed
+#
+
+if [ $# -ne 1 ]
+then
+	echo "Usage: $0 <function>" >&2
+	exit 1
+fi
+
+info --file libc.info.gz --node "Function Index" --index-search $1

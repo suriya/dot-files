@@ -1,0 +1,33 @@
+#
+# $Id: mailpath 1125 2008-11-29 16:52:49Z suriya $
+#
+
+if [ ${HOSTNAME#*.} == "cs.utexas.edu" ]
+then
+MAILPATH="/u/suriya/mailbox?Mail in mailbox"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/austinaaa?Mail in austinaaa"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/fgp?Mail in fgp"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/naadasudha?Mail in naadasudha"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/cegcse99?Mail in cegcse99"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/tca?Mail in tca"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/cs-bulk?Mail in cs-bulk"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/cartel?Mail in cartel"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/speedway?Mail in speedway"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/trips-compiler?Mail in trips-compiler"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/cegtechdisc?Mail in cegtechdisc"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/omkara?Mail in omkara"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/csnews?Mail in csnews"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/business?Mail in business"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/vibha-mailinglist?Mail in vibha-mailinglist"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/vibha-signup?Mail in vibha-signup"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/bmds?Mail in bmds"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/vibha-related?Mail in vibha-related"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/family?Mail in family"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/scale?Mail in scale"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/balalok99?Mail in balalok99"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/rss2email?Mail in rss2email. Waste some time"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/pl-lunch?Mail in pl-lunch"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/dreammile-registration?New dreammile registration"
+MAILPATH="${MAILPATH}:/u/suriya/Mutt-Mail/gmail?Mail in gmail"
+export MAILPATH
+fi

@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# $Id: 1status 776 2007-05-28 01:03:53Z suriya $
+
+if [ -d ./.svn ]; then
+    svn diff --diff-cmd colordiff "$@"
+else
+    if [ -d ./CVS ]; then
+        cvs diff -u "$@" | colordiff
+    else
+        if [ -d ~/.svk/local ] && svk info &>/dev/null; then
+            env SVKDIFF='colordiff -u' svk diff "$@"
+        else
+            if hg id &>/dev/null; then
+                hg diff "$@" | colordiff
+            else
+                echo "Not a SVN/CVS/SVK/Mercurial working directory" >&2
+                exit 1
+            fi
+        fi
+    fi
+fi

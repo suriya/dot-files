@@ -1,0 +1,94 @@
+#!/usr/bin/env python2.4
+
+#
+# $Id: pruneCVS 533 2005-12-06 20:08:32Z suriya $
+#
+# Remove unmodified files from a copy checked out from CVS.
+# When a copy checked out from CVS is no longer (or was never) under active
+# modification, but contains a lot of files which can be retrieved from CVS
+# anytime, removing those files helps in saving space.
+# This is usually true for the new_trips_tests directory. We need only the
+# results files.
+
+import os
+import sys
+import textwrap
+
+def rmFile(f):
+    if not os.path.islink(f):
+        print >> sys.stderr, 'Removing file', f
+        os.unlink(f)
+    else:
+        print >> sys.stderr, 'Not removing symlink', f
+
+def rmDir(d):
+    if not os.path.islink(d):
+        print >> sys.stderr, 'Removing directory', d
+        os.rmdir(d)
+    else:
+        print >> sys.stderr, 'Not removing symlink', d
+
+# Remove all the files not in CVS by recursively walking down the tree
+def pruneFile(cvsstatus, dirname, names):
+    """Remove a file, if it is in CVS"""
+    i = len(names) - 1
+    while (i >= 0):
+        name = names[i]
+        filename = dirname + '/' + name
+        if (filename in cvsstatus) or (name == 'CVS'):
+            del names[i]
+        else:
+            if os.path.isfile(filename):
+                rmFile(filename)
+        i -= 1
+
+def pruneFilesRecursive():
+    cvsstatus = [ './' + i[2:-1] \
+     for i in os.popen('cvs -qn update -d', 'r').xreadlines() \
+     if i[1] == ' ' ]
+    os.path.walk('.', pruneFile, cvsstatus)
+
+# rmdir directories and also directories with just a CVS directory in them
+# This uses os.walk rather than os.path.walk
+# I learnt os.walk only after coding the above
+# This is done only at the lowest level.
+# Call pruneDirsOnce() multiple times till everything is removed
+def pruneDirsOnce(top):
+    changed = False
+    for root, dirs, files in os.walk(top, topdown=True):
+        # If the only directory under root is CVS, then rm -rf root
+        if ((len(files) == 0) and (len(dirs) == 1) and (dirs[0] == 'CVS') and (root != top)):
+            changed = True
+            cvsdir = os.path.join(root, 'CVS')
+            for i in [ 'Entries', 'Repository', 'Root', 'Tag' ]:
+                filename = os.path.join(cvsdir, i)
+                if os.path.exists(filename):
+                    rmFile(filename)
+            rmDir(cvsdir)
+            del dirs[0]
+            rmDir(root)
+    return changed
+
+def pruneDirs(top):
+    while pruneDirsOnce(top):
+        pass
+
+def usage():
+    if (len(sys.argv) < 2) or ((sys.argv[1] != '-f') and (sys.argv[1] != '--force')):
+        print >> sys.stderr, textwrap.dedent("""\
+        Usage: pruneCVS -f|--force
+
+        Go to the root directory of the module checked out from CVS and issue
+        this command. This will remove files that have not been modified. You
+        can use `cvs update -d' later to get back the files removed by
+        pruneCVS. The purpose of this script is to save space when archiving
+        results of TRIPS tests runs.
+
+        THIS SCRIPT REMOVES FILES ON YOUR FILESYSTEM. USE WITH CARE. HAVE A
+        BACKUP PLAN IN HAND. CHECK THAT THE ACTIONS PERFORMED ARE EXPECTED.
+        THIS SCRIPT COMES WITH NO WARRANTY.""")
+        sys.exit(0)
+    
+usage()
+pruneFilesRecursive()
+pruneDirs('.')

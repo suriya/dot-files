@@ -1,0 +1,16 @@
+#
+# $Id: console-vim-keymap 749 2007-02-19 16:02:09Z suriya $
+#
+
+#
+# This swaps Escape and Caps_Lock, so that my vim editing sessions are
+# faster than ever
+#
+# Run in the console
+# /bin/loadkeys FILENAME
+# 
+# Suriya Subramanian <suriya@cs.utexas.edu>
+#
+
+keycode 58 = Escape
+keycode  1 = Caps_Lock

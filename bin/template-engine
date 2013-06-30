@@ -1,0 +1,125 @@
+#!/usr/bin/env python2.4
+
+#
+# $Id: template-engine 760 2007-03-19 15:45:14Z suriya $
+#
+
+import optparse
+from string import Template
+import sys
+import imp
+import inspect
+
+#
+# Decorators to partially ensure type safety of functions
+#
+def paramTypes(*types):
+  "Decorator to check the types of a function's arguments."
+  def require(func):
+    def wrapper(*args):
+      for t, a in zip(types, args):
+        if ((t != None) and (a != None)):
+          assert isinstance(a, t)
+      return func(*args)
+    return wrapper
+  return require
+
+def returnType(retType):
+  "Decorator to check the type a function's return value"
+  def require(func):
+    def wrapper(*args):
+      retVal = func(*args)
+      if ((retType != None) and (retVal != None)):
+        assert isinstance(retVal, retType)
+      return retVal
+    return wrapper
+  return require
+
+#
+# Actual code of template-engine
+#
+
+@returnType(str)
+@paramTypes(str, None)
+def translate(input_string, context):
+    d = {}
+    for (name, value) in inspect.getmembers(context):
+        d[name] = value
+    return Template(input_string).substitute(d)
+
+@returnType(bool)
+@paramTypes(list, list)
+def iterate(current_indices, max_indices):
+    i = 0
+    while(i < len(max_indices)):
+        current_indices[i] = current_indices[i] + 1
+        if(current_indices[i] > max_indices[i]):
+            current_indices[i] = 0
+            i = i+1
+        else:
+            break
+    return (i < len(max_indices))
+
+@returnType(None)
+@paramTypes(list)
+def actual_values(current_indices, sorted_keys, Data):
+    context = Data()
+    # this is for data values
+    for c, s in zip(current_indices, sorted_keys):
+        setattr(context, s, getattr(Data, s)[c])
+    # this is for functions which depend on the data values
+    d = {}
+    for (name, func) in inspect.getmembers(context, inspect.ismethod):
+        d[name] = func()
+    for (name, value) in d.iteritems():
+        setattr(context, name, value)
+    return context
+
+@paramTypes(str, str, list, list, object, bool)
+def process(template, outputfilename, current_indices, sorted_keys, Data, debug):
+    context = actual_values(current_indices, sorted_keys, Data)
+    outputfilename = translate(outputfilename, context)
+    outputfile = open(outputfilename, 'w')
+    outputfile.write(translate(template, context))
+    if (debug):
+        sys.stderr.write('Wrote file %s\n' % outputfilename)
+
+# Command line flags
+usage = 'usage: %prog --template FILE --data FILE'
+version = '%prog $Revision: 760 $'
+cmdline = optparse.OptionParser(usage=usage, version=version)
+cmdline.add_option('-t', '--template',
+    dest='templatefile',
+	help='use FILE as the template',
+    metavar='FILE')
+cmdline.add_option('-d', '--data',
+    dest='datafile',
+	help='get data from FILE',
+    metavar='FILE')
+cmdline.add_option('-q', '--quiet',
+    action='store_true',
+	dest='quiet',
+    default=False,
+	help='do not print debug messages to stderr')
+(options, args) = cmdline.parse_args()
+if (None == options.templatefile):
+    cmdline.error('required option --template not passed')
+if (None == options.datafile):
+    cmdline.error('required option --data not passed')
+
+# Open the data file which is a python program. As a result, we now have a
+# module called parameters
+parameters = imp.load_source('', '.', open(options.datafile, 'r'))
+templatefile = open(options.templatefile, 'r')
+template = templatefile.read()
+
+Data = parameters.Data
+outputfilename = parameters.outputfilename
+sorted_keys = [ i for i in dir(Data) if isinstance(getattr(Data, i), list) ]
+sorted_keys.sort()
+max_indices = [ (len(getattr(Data, i)) - 1) for i in sorted_keys ]
+current_indices = [ 0 for i in sorted_keys ]
+while True:
+    process(template, outputfilename, current_indices, sorted_keys, Data, not options.quiet)
+    if not iterate(current_indices, max_indices):
+        break

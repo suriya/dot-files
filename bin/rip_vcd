@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+#
+# $Id: rip_vcd 760 2007-03-19 15:45:14Z suriya $
+#
+
+BLUE="[34;01m"
+CYAN="[36;01m"
+GREEN="[32;01m"
+RED="[31;01m"
+OFF="[0m"
+
+[ $# -ne 1 ] && { echo "Usage $0 <URL> <output_file>">&2; exit 1; }
+[ -a movie.avi ] && { echo "${RED}movie.avi exists. Bye{OFF}">&2; exit 1; }
+
+rm -fv frameno.avi
+mencoder $1 -ovc frameno -o frameno.avi -oac mp3lame -lameopts vbr=3
+mencoder $1 -ovc lavc -lavcopts vcodec=mpeg4:vpass=1 -oac copy -o movie.avi
+mencoder $1 -ovc lavc -lavcopts vcodec=mpeg4:vpass=2 -oac copy -o movie.avi

@@ -1,0 +1,17 @@
+#
+# $Id: prompt 1440 2012-07-28 20:43:36Z suriya $
+#
+
+PS1_RESET="\[\017\]"
+PS1_NORMAL="\[\033[0m\]"
+PS1_RED="\[\033[31;1m\]"
+PS1_YELLOW="\[\033[33;1m\]"
+PS1_PURPLE="\[\033[35;1m\]"
+PS1_CYAN="\[\033[36;1m\]"
+PS1_SMILEY="${PS1_CYAN}:)${PS1_NORMAL}"
+PS1_FROWNY="${PS1_RED}:(${PS1_NORMAL}"
+PS1_SELECT="if [ \$? = 0 ]; then echo \"${PS1_SMILEY}\"; else echo \"${PS1_FROWNY}\"; fi"
+# PS1_SELECT=""
+
+# Throw it all together
+PS1="${PS1_RESET}\`${PS1_SELECT}\`${PS1_NORMAL} \t ${PS1_PURPLE}\h${PS1_NORMAL} \w\$ "

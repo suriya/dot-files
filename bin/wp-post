@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+if [ $# != 3 ]
+then
+    echo "Usage: $0 TITLE TAGS CATEGORY"
+    exit 1
+fi
+
+TITLE=$1
+TAGS=$2
+CATEGORY=$3
+
+{
+echo "TITLE: ${TITLE}"
+echo "KEYWORDS: ${TAGS}"
+echo "CATEGORY: ${CATEGORY}"
+CAT <<EOF
+ALLOW PINGS: 1
+ALLOW COMMENTS: 1
+STATUS: publish
+-----
+BODY:
+EOF
+cat /dev/stdin | tr "\n" " "
+} | mtsend -N

@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+#
+# $Id: 1printPDF 1090 2008-11-16 01:42:10Z suriya $
+#
+
+set -e
+
+LANDSCAPE=""
+
+while getopts l OPT; do
+    case "$OPT" in
+        l)  LANDSCAPE="-landscape"
+            ;;
+    esac
+done
+
+shift `expr $OPTIND - 1`
+
+if [ $# -eq 0 ]; then
+    echo "Usage: 1printPDF [-l] <PDF file> ..." >&2
+    exit 1
+fi
+
+while [ $# -ne 0 ]
+do
+	[ ${1##*.} != "pdf" ] && 
+		{ echo "${RED}$1 does not end with .pdf${OFF}" >&2; exit 1; }
+	TEMPFILE=`tempfile --suffix .ps`
+	trap "rm -f ${TEMPFILE}" EXIT
+	acroread -toPostScript ${LANDSCAPE} -pairs "$1" ${TEMPFILE}
+	echo "${CYAN}Printing file $1${OFF}" >&2;
+	lpr -h ${TEMPFILE}
+	shift
+done

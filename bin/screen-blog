@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+#
+# $Id: screen-blog 760 2007-03-19 15:45:14Z suriya $
+#
+
+set -e
+
+sleep 1
+
+export DISPLAY=:0
+TEMPFILE1=`tempfile --suffix=.jpg`
+TEMPFILE2=/tmp/snapshot.jpg
+DATE=`date`
+import -window root ${TEMPFILE1}
+convert ${TEMPFILE1} -resize 640x480 ${TEMPFILE2}
+chmod o+r ${TEMPFILE2}
+
+echo "
+<html>
+<head>
+	<title>This is how my screen looks like</title>
+<body>
+	<img src=\"`basename ${TEMPFILE2}`\" alt=\"Screenshot taken at
+	${DATE}\"><br>
+	Screenshot taken at ${DATE}
+</body>
+</html>" > /tmp/snapshot.html
+chmod o+r /tmp/snapshot.html
+scp ${TEMPFILE2} /tmp/snapshot.html green-slime.cs.utexas.edu:~/public_html
+rm -f ${TEMPFILE1} 

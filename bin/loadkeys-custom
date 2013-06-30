@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+#
+# $Id: loadkeys-custom 497 2005-10-23 00:52:51Z suriya $
+#
+
+#
+# For swapping CapsLock and Esc in console
+#
+
+loadkeys ~/.mine/keymaps/console-vim-keymap

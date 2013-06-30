@@ -1,0 +1,17 @@
+!
+! $Id: X11-vim-keymap 749 2007-02-19 16:02:09Z suriya $
+!
+
+! This swaps Escape and Caps_Lock, so that my vim editing sessions are
+! faster than ever
+!
+! Run in X11
+! xmodmap FILENAME
+! 
+! Suriya Subramanian <suriya@cs.utexas.edu>
+!
+
+remove Lock = Caps_Lock
+keysym Escape = Caps_Lock
+keysym Caps_Lock = Escape
+add Lock = Caps_Lock

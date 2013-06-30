@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+while true
+do
+	ssh carbon-arc.cs.utexas.edu /u/suriya/bin/check-mail && \
+#       zenity --info --title="Mail" --text="You've got mail"
+        growlnotify -n Mail -m "You've got mail."
+	sleep 300
+done

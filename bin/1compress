@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+#
+# $Id: 1compress 760 2007-03-19 15:45:14Z suriya $
+#
+
+[ $# -ne 1 ] && { echo "Usage: $0 <dir>" >&2; exit 1; }
+
+[ -d $1 ] || { echo "Please pass a directory as argument" >&2; exit 1; }
+
+DIR=`readlink -f $1`
+ARCHIVE_NAME=${DIR}.tar.gz
+CMDLINE="tar -zcvf ${ARCHIVE_NAME} $1"
+
+GREEN="[32;01m"
+OFF="[0m"
+echo ${GREEN}${CMDLINE}${OFF}>&2
+${CMDLINE}

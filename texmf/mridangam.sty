@@ -1,0 +1,208 @@
+%
+% $Id: mridangam.sty 1109 2008-11-22 09:30:32Z suriya $
+%
+
+\ProvidesPackage{mridangam}
+
+\typeout{***************************************************}
+\typeout{ Author: Suriya Subramanian <suriya@cs.utexas.edu>}
+\typeout{ This is for formatting my Mridangam notes.}
+\typeout{ This is nothing great.}
+\typeout{***************************************************}
+
+%%%% Definitions for Mridangam terms
+\newcommand{\NADAI}{Nadai}
+\newcommand{\KORVAI}{Korvai}
+\newcommand{\THALAM}{Th\=a\-lam}
+\newcommand{\MATHIRAI}{M\=athirai}
+\newcommand{\RAGAM}{R\=agam}
+\newcommand{\JATHI}{J\=athi}
+\newcommand{\KALAM}{K\=a\-lam}
+\newcommand{\CHAPU}{Ch\=apu}
+\newcommand{\AVARTHANAM}{\=Avarthanam}
+\newcommand{\AADHI}{\=Adhi}
+\newcommand{\ALAVU}{Alavu}
+\newcommand{\TRIKALAM}{Trik\=alam}
+\newcommand{\VIDWAN}{Vid\-w\=an}
+\newcommand{\PURVANGAM}{P\=ur\-v\=an\-gam}
+\newcommand{\UTTARANGAM}{Uttar\=angam}
+\newcommand{\THYAGARAJA}{Sri Thyagaraja Swamigal}
+\newcommand{\AKSHARAM}{Aksharam}
+\newcommand{\KALAI}{Ka\-lai}
+\newcommand{\MEL}{M\=el}
+%% Pancha nadais
+\newcommand{\TISRAM}{Thri\-sh\-ram}
+\newcommand{\TISRA}{Thri\-sh\-ra}
+\newcommand{\CHATUSRAM}{Chaturshram}
+\newcommand{\CHATUSRA}{Chaturshra}
+\newcommand{\KANDAM}{Khan\-dam}
+\newcommand{\KANDA}{Khan\-da}
+\newcommand{\MISRAM}{Mishram}
+\newcommand{\MISRA}{Mishra}
+\newcommand{\SANKIRNAM}{San\-k\=ir\-nam}
+\newcommand{\SANKIRNA}{San\-k\=ir\-na}
+%% Saptha Thalams
+\newcommand{\DHRUVAM}{Dhruvam}
+\newcommand{\DHRUVA}{Dhruva}
+\newcommand{\MATYAM}{Matyam}
+\newcommand{\MATYA}{Matya}
+\newcommand{\RUPAKAM}{R\=upakam}
+\newcommand{\RUPAKA}{R\=upaka}
+\newcommand{\JAMPAI}{Jampai}
+\newcommand{\JAMPA}{Jampa}
+\newcommand{\TRIPUDAI}{Tripudai}
+\newcommand{\TRIPUDA}{Tripuda}
+\newcommand{\ADAI}{Adai}
+\newcommand{\ADA}{Ada}
+\newcommand{\EKA}{\=Eka}
+
+
+%
+%
+%
+\newcommand{\ThalamsFourEightSixteen}{%
+ & \CHATUSRA{}   \JATHI{} \EKA{}     \THALAM \\
+ & \TISRA{}      \JATHI{} \MATYA{}   \THALAM \\
+ & \KANDA{}      \JATHI{} \JAMPA{}   \THALAM \\
+ & \CHATUSRA{}   \JATHI{} \TRIPUDA{} \THALAM \\
+ & \MISRA{}      \JATHI{} \MATYA{}   \THALAM \\
+}
+
+%
+% Title
+%
+\newcommand{\PrintTitle}{%
+\begin{center}%
+{\Large \textbf{\TITLE} \par}%
+\vspace{0.6em}%
+Hariharan M N \par%
+\vspace{0.3em}%
+\texttt{http://www.haran34579.korvai.org} \par% 
+\vspace{0.6em}%
+{\large \today \par}%
+\end{center}%
+\par%
+%
+\noindent These lessons are represented in a notation system described in
+\url{http://www.haran34579.korvai.org/notation/notation.pdf}. The notation
+system is also available in HTML format at
+\url{http://www.haran34579.korvai.org/notation/notation-html/index.html}.
+If you have any suggestions, clarifications, etc. regarding the notation
+system, please feel free to contact the author.\\
+
+\noindent
+This document contains lessons for Mridangam and other percussion
+instruments, and covers the following \THALAM{}s and \NADAI{}s.
+
+\begin{center}
+\begin{tabular}{ll}
+{\bf \THALAM} \THALAMSCOVERED
+{\bf \NADAI}  \NADAISCOVERED
+\end{tabular}
+\end{center}
+
+\noindent
+\rule{\textwidth}{0.6pt}
+}
+
+%
+% Setting up Fancy Headers
+%
+\newcommand{\SetupFancyHeader}{%
+\usepackage{lastpage}%
+\usepackage{fancyhdr}%
+\pagestyle{fancy}%
+\lhead{\textsl{\TITLE}}%
+\chead{}%
+\rhead{\thepage\ of \pageref{LastPage}}%
+\lfoot{}%
+\cfoot{Copyright $\copyright$ 2005 by M N Hariharan \url{<haran34579@korvai.org>}}%
+\rfoot{}%
+\renewcommand{\headrulewidth}{0pt}%
+\renewcommand{\footrulewidth}{0pt}%
+}
+
+%
+% This command is for accent over number or
+% thathakaram
+%
+\newcommand{\T}[1]{\ensuremath{\acute{#1}}}
+
+%
+% This is for line over number to indicate Speed or Mael Kaalam
+%
+\newcommand{\Sp}[1]{\ensuremath{\overline{#1}}}
+
+%
+% Different spacing
+%
+\newcommand{\smallhskip}{\hspace{4pt}}
+\newcommand{\medhskip}{\hspace{8pt}}
+\newcommand{\bighskip}{\hspace{12pt}}
+
+%
+% Samam
+%
+\newcommand{\samam}{\ensuremath{\parallel}}
+
+\newenvironment{lesson}[1]
+{%
+\begin{minipage}{\textwidth}%
+\item[{\large {\sf {#1}}}]%
+\noindent\\%
+}
+{
+\end{minipage}
+}
+
+\newcommand{\midkorvai}
+{
+\noindent
+\par
+\noindent
+}
+
+\newcommand{\Mnadai}[1]{N #1M}
+\newcommand{\Mkorvai}[1]{K #1M}
+\newcommand{\Mas}[1]{As #1M}
+
+
+
+\newcommand{\Msectionover}
+{
+\hspace{\stretch{1}}
+\rule{1cm}{1pt}
+\hspace{\stretch{1}}
+}
+
+\newcommand{\Pu}[1]
+{
+	{{\sf [P #1M]}}
+}
+\newcommand{\Ut}[1]
+{
+	{{\sf [U #1M]}}
+}
+
+
+\newenvironment{Msection}%
+{\begin{list}{}%
+    {	
+	\setlength{\itemindent}{0pt}
+	\setlength{\labelwidth}{0.9in}
+	\setlength{\labelsep}{0.25em}
+	\setlength{\leftmargin}{0pt}
+		\addtolength{\leftmargin}{\labelwidth}
+		\addtolength{\leftmargin}{\labelsep}
+	\setlength{\listparindent}{0pt}
+	\setlength{\topsep}{3ex}
+	\setlength{\partopsep}{0pt}
+	\setlength{\parsep}{\smallskipamount}
+	\setlength{\parskip}{0pt}
+	\setlength{\itemsep}{0pt}
+	\setlength{\listparindent}{0pt}
+    }
+}
+{\end{list}
+\Msectionover
+}

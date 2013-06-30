@@ -1,0 +1,39 @@
+#!/usr/bin/env python2.5
+
+# $Id$
+
+# Monitor laptop temperature and warn when it becomes too high.
+
+import pynotify
+import time
+
+class LaptopTemperatureMonitor:
+    TEMPERATURE_LIMIT = 90 # Celcius
+    ACPI_FILE = '/proc/acpi/thermal_zone/THM/temperature'
+
+    MESSAGE = """Laptop Temperature is too high: %d C"""
+    pynotify.init('laptop-temperature-monitor')
+
+    @classmethod
+    def showWarningMessage(kls, temperature):
+        n = pynotify.Notification('Temperature Alert', kls.MESSAGE % temperature)
+        n.set_urgency(pynotify.URGENCY_CRITICAL)
+        # n.set_timeout(pynotify.EXPIRES_NEVER)
+        n.show()
+
+    @classmethod
+    def checkTemperature(kls):
+        try:
+            temperature = int(open(kls.ACPI_FILE, 'r').read().split()[1])
+            if (temperature > kls.TEMPERATURE_LIMIT):
+                kls.showWarningMessage(temperature)
+        except:
+            kls.showWarningMessage(0)
+
+    @classmethod
+    def doAll(kls):
+        while True:
+            kls.checkTemperature()
+            time.sleep(3)
+
+LaptopTemperatureMonitor.doAll()

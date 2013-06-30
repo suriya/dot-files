@@ -1,0 +1,34 @@
+set mainfont {Monaco 12}
+set curidfont {Monaco 12 bold italic underline}
+set textfont {Monaco 12}
+set findmergefiles 0
+set gaudydiff 0
+set maxgraphpct 50
+set maxwidth 16
+set geometry(width) 1195
+set geometry(height) 699
+set geometry(canv1) 509
+set geometry(canv2) 352
+set geometry(canv3) 296
+set geometry(canvh) 278
+set geometry(ctextw) 122
+set geometry(cflistw) 30
+#
+# authorcolors format:
+#
+# zero or more sublists of
+#
+#    { regex color }
+#
+# followed by a list of colors
+#
+# If the commit author matches a regex in a sublist,
+# the commit will be colored by that color
+# otherwise the next unused entry from the list of colors
+# will be assigned to this commit and also all other commits
+# of the same author.  When the list of colors is exhausted,
+# the last entry will be reused.
+#
+set authorcolors {
+    black blue deeppink mediumorchid blue burlywood4 goldenrod slateblue red2 navy dimgrey
+}

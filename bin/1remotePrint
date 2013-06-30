@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# scp a file to carbon-arc and print it remotely.
+
+set -e
+
+[ $# -eq 0 ] && { echo "Usage: $0 <file> ..." >&2; exit 1; }
+
+while [ $# -ne 0 ]
+do
+    if [ ${1##*.} == "pdf" ]; then
+        REMOTE_PDF_FILE=/tmp/pdf-file-${RANDOM}.pdf
+        scp "$1" suriya@carbon-arc.cs.utexas.edu:${REMOTE_PDF_FILE}
+        ssh suriya@carbon-arc.cs.utexas.edu env PRINTER=${UTCS_PRINTER} /u/suriya/bin/1printPDF ${REMOTE_PDF_FILE}
+    else
+        if [ ${1##*.} == "ps" ]; then
+            REMOTE_PS_FILE=/tmp/ps-file-${RANDOM}.ps
+            scp "$1" suriya@carbon-arc.cs.utexas.edu:${REMOTE_PS_FILE}
+            ssh suriya@carbon-arc.cs.utexas.edu env PRINTER=${UTCS_PRINTER} /lusr/bin/lpr -h ${REMOTE_PS_FILE}
+        else
+            echo "$1 does not end with .pdf or .ps" >&2
+            exit 1
+        fi
+    fi
+    shift
+done

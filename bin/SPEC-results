@@ -1,0 +1,171 @@
+#!/usr/bin/env python
+
+#
+# $Id: SPEC-results 760 2007-03-19 15:45:14Z suriya $
+#
+
+#
+# command line is of the form ./getResult.py sim_IPC base with_Y [-cd]
+#
+# -cd means order the output to provide the results in each directory for
+# each configuration
+# -dc means order the output to provide the results in each configuration
+# for each directory
+#
+# The default is -dc
+#
+
+cfgdir='/u/suriya/Study/CS382M/HW4/5.10/config/'  # directory containing your config files (say)
+										# config_8.cfg
+										# config_16.cfg
+										# config_32.cfg
+resdir='/u/suriya/Study/CS382M/HW4/5.10/run/'	# directory containing the result directories (say)
+										# base with_X with_Y with_XandY
+
+possible_parameters = [ 'sim_num_insn', 'sim_num_refs',
+'sim_num_loads', 'sim_num_stores', 'sim_num_branches',
+'sim_elapsed_time', 'sim_inst_rate', 'sim_total_insn',
+'sim_total_refs', 'sim_total_loads', 'sim_total_stores',
+'sim_total_branches', 'sim_cycle', 'sim_IPC', 'sim_CPI', 'sim_exec_BW',
+'sim_IPB', 'bpred_21264.lookups', 'bpred_21264.updates',
+'bpred_21264.addr_hits', 'bpred_21264.dir_hits',
+'bpred_21264.used_21264', 'bpred_21264.misses', 'bpred_21264.jr_hits',
+'bpred_21264.jr_seen', 'bpred_21264.jr_non_ras_hits.PP',
+'bpred_21264.jr_non_ras_seen.PP', 'bpred_21264.bpred_addr_rate',
+'bpred_21264.bpred_dir_rate', 'bpred_21264.bpred_jr_rate',
+'bpred_21264.bpred_jr_non_ras_rate.PP', 'bpred_21264.retstack_rpushes',
+'bpred_21264.retstack_rpops', 'bpred_21264.retstack_vpushes',
+'bpred_21264.retstack_vpops', 'bpred_21264.used_ras.PP',
+'bpred_21264.ras_hits.PP', 'bpred_21264.ras_rate.PP',
+'wb_load_replaytrap', 'cache_quadword_trap', 'cache_diffaddr_trap',
+'wb_store_replaytrap', 'wb_diffsize_replaytrap', 'commit_ctrl_flushes',
+'commit_trap_flushes', 'map_num_early_retire', 'syscall_cycles',
+'trap_cycles', 'DL1.accesses', 'DL1.hits', 'DL1.misses',
+'DL1.mshr_misses', 'DL1.mshr_full', 'DL1.replacements',
+'DL1.writebacks', 'DL1.read_traffic', 'DL1.write_traffic',
+'DL1.address_traffic', 'DL1.traffic', 'DL1.invalidations',
+'DL1.miss_rate', 'DL1.puremiss_rate', 'DL1.repl_rate', 'DL1.wb_rate',
+'DL1.inv_rate', 'IL1.accesses', 'IL1.hits', 'IL1.misses',
+'IL1.mshr_misses', 'IL1.mshr_full', 'IL1.replacements',
+'IL1.writebacks', 'IL1.read_traffic', 'IL1.write_traffic',
+'IL1.address_traffic', 'IL1.traffic', 'IL1.invalidations',
+'IL1.miss_rate', 'IL1.puremiss_rate', 'IL1.repl_rate', 'IL1.wb_rate',
+'IL1.inv_rate', 'IL1.way_pred_lookups', 'IL1.way_pred_hits',
+'IL1.way_pred_misses', 'IL1.line_pred_lookups', 'IL1.line_pred_hits',
+'IL1.line_pred_misses', 'L2.accesses', 'L2.hits', 'L2.misses',
+'L2.mshr_misses', 'L2.mshr_full', 'L2.replacements', 'L2.writebacks',
+'L2.read_traffic', 'L2.write_traffic', 'L2.address_traffic',
+'L2.traffic', 'L2.invalidations', 'L2.miss_rate', 'L2.puremiss_rate',
+'L2.repl_rate', 'L2.wb_rate', 'L2.inv_rate', 'DTLB.accesses',
+'DTLB.hits', 'DTLB.misses', 'DTLB.mshr_misses', 'DTLB.mshr_full',
+'DTLB.replacements', 'DTLB.writebacks', 'DTLB.read_traffic',
+'DTLB.write_traffic', 'DTLB.address_traffic', 'DTLB.traffic',
+'DTLB.invalidations', 'DTLB.miss_rate', 'DTLB.puremiss_rate',
+'DTLB.repl_rate', 'DTLB.wb_rate', 'DTLB.inv_rate', 'ITLB.accesses',
+'ITLB.hits', 'ITLB.misses', 'ITLB.mshr_misses', 'ITLB.mshr_full',
+'ITLB.replacements', 'ITLB.writebacks', 'ITLB.read_traffic',
+'ITLB.write_traffic', 'ITLB.address_traffic', 'ITLB.traffic',
+'ITLB.invalidations', 'ITLB.miss_rate', 'ITLB.puremiss_rate',
+'ITLB.repl_rate', 'ITLB.wb_rate', 'ITLB.inv_rate', 'Onbus.idle',
+'Onbus.queued', 'Onbus.requests', 'Onbus.idle_cycles',
+'Onbus.queued_cycles', 'Membus.idle', 'Membus.queued',
+'Membus.requests', 'Membus.idle_cycles', 'Membus.queued_cycles',
+'SDRAM.accesses', 'ld_text_base', 'ld_text_size', 'ld_data_base',
+'ld_data_size', 'ld_stack_base', 'ld_stack_size', 'ld_prog_entry',
+'ld_environ_base', 'ld_target_big_endian', 'mem_brk_point',
+'mem_stack_min', 'mem_total_data', 'mem_total_heap', 'mem_total_stack',
+'mem_total_mem']
+
+import sys
+import os
+import re
+import string
+
+def isParameterValid(p):
+	for i in possible_parameters:
+		if(p == i):
+			return 1
+	return 0
+
+if(len(sys.argv) < 3):
+	sys.stderr.write('Usage: ' + sys.argv[0] + ' <param> <dir> ...\n')
+	sys.exit(1)
+
+parameter = sys.argv[1]
+if(not isParameterValid(parameter)):
+	sys.stderr.write('Parameter ' + parameter + ' is not valid\n')
+	sys.stderr.write('Possible parameters are: \n')
+	for i in possible_parameters:
+		sys.stderr.write(i + '\n')
+	sys.stderr.write(
+"""If you feel that your parameter you entered is wrongly not in the list,
+then add it to the list possible_parameters in the file """ + sys.argv[0] +
+'\n')
+	sys.exit(5)
+
+dir_list = []
+ordering = '-dc'
+processing_cmdline_over = 0
+for i in sys.argv[2:]:
+	if(not processing_cmdline_over):
+		if(i[0] != '-'):
+			x = resdir + '/' + i
+			if(not os.access(x, os.F_OK | os.R_OK)):
+				sys.stderr.write('Result directory ' + x + ' does not exist.\n')
+				sys.exit(3)
+			else:
+				dir_list.append(i)
+		else:
+			if((i != '-dc') and (i != '-cd')):
+				sys.stderr.write('Ordering should be either -dc or -cd\n')
+				sys.exit(4)
+			else:
+				ordering = i
+				processing_cmdline_over = 1
+
+cfgs = os.listdir(cfgdir)
+for i in range(len(cfgs)):
+	result = re.match('config_(.+)\.cfg', cfgs[i])
+	if(result == None):
+		sys.stderr.write('Config filename in ' + cfgdir + ' is not in the format config_XXX.cfg\n')
+		sys.exit(2)
+	cfgs[i] = result.group(1)
+
+benchmarks = [ '164.gzip', '175.vpr', '176.gcc', '181.mcf', '186.crafty',
+'197.parser', '252.eon', '253.perlbmk', '254.gap', '255.vortex',
+'256.bzip2', '300.twolf', '168.wupwise', '171.swim', '172.mgrid',
+'173.applu', '177.mesa', '178.galgel', '179.art', '183.equake',
+'187.facerec', '188.ammp', '189.lucas', '191.fma3d', '200.sixtrack',
+'301.apsi']
+
+
+# Line 1
+sys.stdout.write(string.ljust('Benchmark', 15))
+for i in dir_list:
+	sys.stdout.write(string.center(i, 15 * len(cfgs)))
+sys.stdout.write('\n')
+
+# Line 2
+sys.stdout.write(string.ljust('', 15))
+for i in range(len(dir_list)):
+	for j in cfgs:
+		sys.stdout.write(string.center(j, 15))
+sys.stdout.write('\n')
+
+# Results
+for i in benchmarks:
+	sys.stdout.write(string.ljust(i, 15))
+	for j in dir_list:
+		for k in cfgs:
+			filename = resdir + '/' + j + '/result.' + i + '.' + k
+			cmdline = ('grep ' + parameter + ' ' + filename + ' | tr -s " " '
+			           + " | cut -d' ' -f2 "
+					   + ' | tr -d "\n"')
+			# sys.stderr.write(cmdline + '\n')
+			sys.stdout.write(string.rjust(os.popen(cmdline).readline(), 15))
+			# os.system(cmdline)
+			sys.stdout.flush()
+	sys.stdout.write('\n')
+
+
+

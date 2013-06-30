@@ -1,0 +1,14 @@
+[extensions]
+hgk=
+color=
+graphlog=
+bookmarks=
+progress=
+
+[color]
+diff.file_b = blue bold
+diff.inserted = blue bold
+
+[ui]
+style = /Users/suriya/.mine/rcfiles/map-cmdline.changedfiles
+username = Suriya Subramanian <suriya@cs.utexas.edu>

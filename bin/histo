@@ -1,0 +1,19 @@
+#!/usr/bin/env python2.4
+
+#
+# $Id: histo 447 2005-08-17 22:24:54Z suriya $
+#
+
+import sys
+
+sum = 0.0
+data = []
+for line in sys.stdin:
+    size, name = tuple(line.split())
+    size = float(size)
+    sum += size
+    data += [ (name, size) ]
+
+for name, size in data:
+    if (size > 0.01 * sum):
+        print '%-50s %s' % (name, '*' * int(size * 100.0 / sum))

@@ -1,0 +1,42 @@
+$Id: README 353 2005-04-04 19:00:57Z suriya $
+
+.
+|-- README
+|-- fonts
+|   |-- ecparanar.tfm
+|   |-- ecparanar.vf
+|   |-- ecparanarb.tfm
+|   |-- ecparanarb.vf
+|   |-- ecparanari.tfm
+|   |-- ecparanari.vf
+|   |-- recparanar.1037pk
+|   |-- recparanar.1244pk
+|   |-- recparanar.1493pk
+|   |-- recparanar.540pk
+|   |-- recparanar.600pk
+|   |-- recparanar.720pk
+|   |-- recparanar.864pk
+|   |-- recparanar.tfm
+|   |-- recparanarb.tfm
+|   `-- recparanari.tfm
+|-- tamiltrans
+|-- texmf
+|   |-- t1paranar.fd
+|   `-- tamiltrans.sty
+`-- ttf
+    |-- paranar.ttf
+    |-- paranarb.ttf
+    `-- paranari.ttf
+
+Add the directory fonts to your TEXFONTS environmental variable.
+export TEXFONTS=${TEXFONTS}:`pwd`/fonts
+
+Add the directory texmf to your TEXINPUTS environmental variable.
+export TEXINPUTS=${TEXINPUTS}:`pwd`/texmf
+
+How to use tamiltrans?
+
+1. Create a .ttex input file as shown in doc/tamiltransdoc.pdf
+2. tamiltrans --help
+3. tamiltrans < input.ttex > output.tex
+4. latex output.tex

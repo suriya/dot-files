@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+#
+# $Id: green-slime_backup 760 2007-03-19 15:45:14Z suriya $
+#
+
+CYAN="[36;01m"
+RED="[31;01m"
+OFF="[0m"
+
+[ ${HOSTNAME} == "layam" ] ||
+	{ echo "${RED}Suriya, You can run this command only from your desktop at home${OFF}";
+	  exit 1;
+	}
+
+source ~/.keychain/${HOSTNAME}-sh
+# CMD1="rsync -avz --delete green-slime.cs.utexas.edu:/u/suriya/ /home/suriya/rsync"
+# echo ${CYAN}${CMD1}${OFF}
+# ${CMD1}
+CMD2="rsync -avz --delete /home/suriya/ bell.cs.utexas.edu:/var/local/blackstone"
+echo ${CYAN}${CMD2}${OFF}
+${CMD2}

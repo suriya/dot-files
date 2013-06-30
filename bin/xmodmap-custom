@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+#
+# $Id: xmodmap-custom 760 2007-03-19 15:45:14Z suriya $
+#
+
+#
+# For swapping CapsLock and Esc in X11
+#
+
+xmodmap ~/.mine/keymaps/X11-vim-keymap

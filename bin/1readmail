@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+#
+# $Id: 1readmail 253 2005-02-11 17:47:16Z suriya $
+#
+
+for a in ~/Mutt-Mail/*
+do
+	file $a | cut -d':' -f2 | grep mail &>/dev/null
+	if [ $? -eq 0 ]
+	then
+		mutt -f $a
+	fi
+done
