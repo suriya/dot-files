@@ -188,3 +188,4 @@ let g:EclimDisabled = 1
 
 set modeline
 set modelines=5
+let g:netrw_sort_sequence = '[\/]$,\<core\%(\.\d\+\)\=,\.[a-np-z]$,\.h$,\.c$,\.cpp$,*,\.pyc$,\.o$,\.obj$,\.info$,\.swp$,\.bak$,\~$'
