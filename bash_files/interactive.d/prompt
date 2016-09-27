@@ -12,7 +12,7 @@ PS1_SMILEY="${PS1_CYAN}:)${PS1_NORMAL}"
 PS1_FROWNY="${PS1_RED}:(${PS1_NORMAL}"
 PS1_SELECT="if [ \$? = 0 ]; then echo \"${PS1_SMILEY}\"; else echo \"${PS1_FROWNY}\"; fi"
 # PS1_SELECT=""
-PS1_SSH_AGENT="if [ -n \"${SSH_AGENT_PID}\" ]; then echo -n -e \"\xF0\x9F\x94\x92 \"; fi"
+PS1_SSH_AGENT="if [ -n \"\${SSH_AGENT_PID}\" ]; then echo -n -e \"\xF0\x9F\x94\x92 \"; fi"
 
 # Throw it all together
 PS1="${PS1_RESET}\`${PS1_SELECT}\`${PS1_NORMAL} \`${PS1_SSH_AGENT}\`\t ${PS1_PURPLE}\h${PS1_NORMAL} \w\$ "
