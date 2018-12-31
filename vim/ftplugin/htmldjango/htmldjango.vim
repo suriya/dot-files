@@ -10,3 +10,4 @@ call IMAP("THEAD", "<thead><tr>\<cr><th><++></th>\<cr><th><++></th>\<cr></tr>\<c
 call IMAP("TROW",  "<tr>\<cr><td><++></td>\<cr><td><++></td>\<cr></tr>\<cr><++>", "htmldjango")
 call IMAP("FOR",   "{% for <++> in <++> %}\<cr><++>\<cr>{% endfor %}\<cr><++>", "htmldjango")
 call IMAP("EMPTY", "{% empty %}\<cr><tr><td class=\"text-center\" colspan=\"1000\">No <++> found.</td></tr>", "htmldjango")
+call IMAP("CARD", "<div class=\"card\">\<cr><div class=\"card-header\">\<cr><h3>\<cr><++></h3>\<cr></div>\<cr><div class=\"card-block\">\<cr><++></div>\<cr></div>\<cr><++>", "htmldjango")
